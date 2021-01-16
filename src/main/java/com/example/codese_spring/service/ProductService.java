@@ -35,10 +35,68 @@ public class ProductService {
         }
     }
 
-    public boolean addProduct(String productID, String display, int priceIn, int priceOut, int priceSale, int amount, int shipday, String description, String images) {
+    public Boolean addProduct(String productID, String display, int priceIn, int priceOut, int priceSale, int amount, int shipday, String description, String images) {
         try {
             if (!productRepository.checkProductExistedById(productID) && !productRepository.checkProductExistedByName(display)) {
                 if (productRepository.addProduct(productID, display, priceIn, priceOut, priceSale, amount, shipday, description, images) != 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public List<ProductCRUD> getProductByPriceWithOrder(Integer sortType) {
+        try {
+            switch (sortType) {
+                case 0:
+                    return productRepository.getAllPriceOutAsc(sortType);
+                case 1:
+                    return productRepository.getAllPriceOutDesc(sortType);
+                default:
+                    return null;
+            }
+        } catch (Exception e) {
+            System.out.println("Loi roi");
+            return null;
+        }
+    }
+
+    public List<ProductCRUD> getProductByDisplayWithOrder(Integer sortType) {
+        try {
+            switch (sortType) {
+                case 0:
+                    return productRepository.getAllDisplayAsc(sortType);
+                case 1:
+                    return productRepository.getAllDisplayDesc(sortType);
+                default:
+                    return null;
+            }
+        } catch (Exception e) {
+            System.out.println("Loiiii");
+            return null;
+        }
+    }
+
+    public List<ProductCRUD> getProductByDisplay(String display) {
+        try {
+            return productRepository.getProductByDisplay(display);
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    public Boolean updateProduct(ProductCRUD productCRUD) {
+        try {
+            if (productRepository.checkProductExistedById(productCRUD.getProductID())) {
+                if(productRepository.updateProduct(productCRUD) != 0) {
                     return true;
                 } else {
                     return false;

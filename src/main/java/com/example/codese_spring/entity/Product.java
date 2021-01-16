@@ -1,5 +1,7 @@
 package com.example.codese_spring.entity;
 
+import java.util.UUID;
+
 public class Product {
     private String productID;
     private String display;

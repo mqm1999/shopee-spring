@@ -16,22 +16,59 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    // get all
     @GetMapping("/all")
     public ResponseEntity<ResponseForm<List<ProductGetAll>>> getAllProducts() {
-        List<ProductGetAll> productGetAll = (List<ProductGetAll>) productService.getAllProducts();
+        List<ProductGetAll> productGetAll = productService.getAllProducts();
         return ResponseEntity.ok(ResponseForm.buildCustomResponse(productGetAll, 1, "okokok"));
     }
 
+    // tim bang id
     @GetMapping("/find-by-id")
     public @ResponseBody
     ResponseEntity<ResponseForm<ProductCRUD>> getProductById(@RequestParam String idInput) {
         return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.getProductById(idInput), 1, "okokok"));
     }
 
+    // sap xep priceOut
+    @GetMapping("/get-price-out-order")
+    public @ResponseBody
+    ResponseEntity<ResponseForm<List<ProductCRUD>>> getProductByPriceWithOrder(@RequestParam Integer sortType) {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.getProductByPriceWithOrder(sortType), 1, "okokok"));
+    }
+
+    // sap xep display
+    @GetMapping("/get-display")
+    public @ResponseBody
+    ResponseEntity<ResponseForm<List<ProductCRUD>>> getProductByDisplayWithOrder(@RequestParam Integer sortType) {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.getProductByDisplayWithOrder(sortType), 1, "okokok"));
+    }
+
+    // tim kiem theo ten khong phan biet hoa thuong
+    @GetMapping("/find-by-name")
+    public @ResponseBody
+    ResponseEntity<ResponseForm<List<ProductCRUD>>> getProductByDisplay(@RequestParam String display) {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.getProductByDisplay(display), 1, "okokok"));
+    }
+
+    // add product
     @PostMapping("/add-product")
-    public @ResponseBody ResponseEntity<ResponseForm<Boolean>> addProduct(@RequestParam String productID, @RequestParam String display, @RequestParam int priceIn, @RequestParam int priceOut,
-                                            @RequestParam int priceSale, @RequestParam int amount, @RequestParam int shipday,
-                                            @RequestParam String description, @RequestParam String images) {
-        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.addProduct(productID, display, priceIn, priceOut, priceSale, amount, shipday, description, images),1,"okokok"));
+    public @ResponseBody
+    ResponseEntity<ResponseForm<Boolean>> addProduct(@RequestBody ProductCRUD productCRUD) {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.addProduct(
+                productCRUD.getProductID(), productCRUD.getDisplay(), productCRUD.getPriceIn(),
+                productCRUD.getPriceOut(), productCRUD.getPriceSale(), productCRUD.getAmount(), productCRUD.getShipday(),
+                productCRUD.getDescription(), productCRUD.getImages()), 1, "okokok"));
+    }
+
+    // update product bang id
+    public @ResponseBody
+    ResponseEntity<ResponseForm<Boolean>> updateProduct(@RequestBody ProductCRUD productCRUD) {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.updateProduct(productCRUD), 1, "okokok"));
+    }
+
+    @GetMapping("/test-ex")
+    public Integer testException(@RequestParam Integer input) {
+        return input;
     }
 }
