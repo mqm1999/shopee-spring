@@ -2,13 +2,16 @@ package com.example.codese_spring.repository;
 
 import com.example.codese_spring.dto.ProductCRUD;
 import com.example.codese_spring.dto.ProductGetAll;
+import com.example.codese_spring.entity.Product;
 import com.example.codese_spring.helper.JdbcMapper.ProductCRUDMapper;
 import com.example.codese_spring.helper.JdbcMapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Types;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class ProductRepository {
@@ -24,7 +27,7 @@ public class ProductRepository {
 
     // get by id
     public ProductCRUD getProductById(String idInput) {
-        String sql = "select * from Product where `productID` = ?;";
+        String sql = "select * from Product where productID = ?;";
         Object[] params = {idInput};
         ProductCRUD product = (ProductCRUD) jdbcTemplate.queryForObject(sql, new ProductCRUDMapper(), params);
         return product;
@@ -32,7 +35,7 @@ public class ProductRepository {
 
     // check existed by id
     public boolean checkProductExistedById(String idInput) {
-        String sql = "select exists (select * from Product where `productID` = ? and deleted = 0;);";
+        String sql = "select exists (select * from Product where productID = ? and deleted = 0);";
         Object[] params = {idInput};
         return jdbcTemplate.queryForObject(sql, Boolean.class, params);
     }
@@ -45,9 +48,10 @@ public class ProductRepository {
     }
 
     // add
-    public Integer addProduct(String productID, String display, int priceIn, int priceOut, int priceSale, int amount, int shipday, String description, String images) {
-        String sql = "insert into Product (productID, display, priceIn, priceOut, priceSale, amount, shipday, description, images) values (?,?,?,?,?,?,?,?,?);";
-        Object[] params = {productID, display, priceIn, priceOut, priceSale, amount, shipday, description, images};
+    public Integer addProduct(ProductCRUD productCRUD) {
+        String sql = "insert into Product (productID, display, priceIn, priceOut, priceSale, amount, shipday, description, images) values (?,?,?,?,?,?,?,?,?)";
+        String uuid = UUID.randomUUID().toString();
+        Object[] params = {uuid, productCRUD.getDisplay(), productCRUD.getPriceIn(), productCRUD.getPriceOut(), productCRUD.getPriceSale(), productCRUD.getAmount(), productCRUD.getShipday(), productCRUD.getDescription(), productCRUD.getImages()};
         return jdbcTemplate.update(sql, params);
     }
 
@@ -87,9 +91,23 @@ public class ProductRepository {
         return jdbcTemplate.query(sql, new ProductCRUDMapper(), params);
     }
 
-    public Integer updateProduct(ProductCRUD productCRUD) {
+    public Integer updateProduct1(ProductCRUD productCRUD) {
         String sql = "update Product set display = ?, priceIn = ?, priceOut = ?, priceSale = ?, amount = ?, shipday = ?, description = ?, images = ? where productID = ?;";
         return jdbcTemplate.update(sql, productCRUD.getDisplay(), productCRUD.getPriceIn(), productCRUD.getPriceOut(),
                 productCRUD.getPriceSale(), productCRUD.getAmount(), productCRUD.getShipday(), productCRUD.getDescription(), productCRUD.getImages(), productCRUD.getProductID());
+    }
+
+    public Integer updateProduct(ProductCRUD productCRUD) {
+        String sql = "update Product set display = ?, priceIn = ?, priceOut = ?, priceSale = ?, amount = ?, shipday = ?, description = ?, images = ? where productID = ?;";
+        Object[] params = {productCRUD.getDisplay(), productCRUD.getPriceIn(), productCRUD.getPriceOut(),
+                productCRUD.getPriceSale(), productCRUD.getAmount(), productCRUD.getShipday(), productCRUD.getDescription(), productCRUD.getImages(), productCRUD.getProductID()};
+        int[] types = {Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR};
+        return jdbcTemplate.update(sql, params, types);
+    }
+
+    public Integer deleteProduct(String productID) {
+        String sql = "update Product set deleted = 1 where productID = ?;";
+        Object[] params = {productID};
+        return jdbcTemplate.update(sql, params);
     }
 }

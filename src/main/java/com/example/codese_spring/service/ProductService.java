@@ -35,10 +35,10 @@ public class ProductService {
         }
     }
 
-    public Boolean addProduct(String productID, String display, int priceIn, int priceOut, int priceSale, int amount, int shipday, String description, String images) {
+    public Boolean addProduct(ProductCRUD productCRUD) {
         try {
-            if (!productRepository.checkProductExistedById(productID) && !productRepository.checkProductExistedByName(display)) {
-                if (productRepository.addProduct(productID, display, priceIn, priceOut, priceSale, amount, shipday, description, images) != 0) {
+            if (!productRepository.checkProductExistedById(productCRUD.getProductID()) && !productRepository.checkProductExistedByName(productCRUD.getDisplay())) {
+                if (productRepository.addProduct(productCRUD) != 0) {
                     return true;
                 } else {
                     return false;
@@ -96,11 +96,28 @@ public class ProductService {
     public Boolean updateProduct(ProductCRUD productCRUD) {
         try {
             if (productRepository.checkProductExistedById(productCRUD.getProductID())) {
-                if(productRepository.updateProduct(productCRUD) != 0) {
+                if (productRepository.updateProduct1(productCRUD) != 0 && productRepository.checkProductExistedByName(productCRUD.getDisplay())) {
                     return true;
                 } else {
+                    System.out.println(productRepository.updateProduct(productCRUD));
                     return false;
                 }
+            } else {
+                System.out.println(productRepository.checkProductExistedById(productCRUD.getProductID()));
+                System.out.println(productRepository.checkProductExistedByName(productCRUD.getDisplay()));
+                System.out.println("vao day roi");
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public Boolean deleteProduct(String productID) {
+        try {
+            if (productRepository.checkProductExistedById(productID) && productRepository.deleteProduct(productID) != 0) {
+                return true;
             } else {
                 return false;
             }

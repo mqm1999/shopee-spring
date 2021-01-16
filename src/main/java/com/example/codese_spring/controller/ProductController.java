@@ -56,15 +56,24 @@ public class ProductController {
     public @ResponseBody
     ResponseEntity<ResponseForm<Boolean>> addProduct(@RequestBody ProductCRUD productCRUD) {
         return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.addProduct(
-                productCRUD.getProductID(), productCRUD.getDisplay(), productCRUD.getPriceIn(),
-                productCRUD.getPriceOut(), productCRUD.getPriceSale(), productCRUD.getAmount(), productCRUD.getShipday(),
-                productCRUD.getDescription(), productCRUD.getImages()), 1, "okokok"));
+//                productCRUD.getProductID(), productCRUD.getDisplay(), productCRUD.getPriceIn(),
+//                productCRUD.getPriceOut(), productCRUD.getPriceSale(), productCRUD.getAmount(), productCRUD.getShipday(),
+//                productCRUD.getDescription(), productCRUD.getImages()
+                productCRUD
+        ), 1, "okokok"));
     }
 
     // update product bang id
+    @PutMapping("/update")
     public @ResponseBody
     ResponseEntity<ResponseForm<Boolean>> updateProduct(@RequestBody ProductCRUD productCRUD) {
         return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.updateProduct(productCRUD), 1, "okokok"));
+    }
+
+    // delete product by id
+    @DeleteMapping("/delete")
+    public @ResponseBody ResponseEntity<ResponseForm<Boolean>> deleteProduct(@RequestParam String productID) {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.deleteProduct(productID), 1, "okokok"));
     }
 
     @GetMapping("/test-ex")
