@@ -1,7 +1,7 @@
 package com.example.codese_spring.service;
 
-import com.example.codese_spring.dto.ProductCRUD;
-import com.example.codese_spring.dto.ProductGetAll;
+import com.example.codese_spring.dto.ProductDTO;
+import com.example.codese_spring.dto.ProductHomepageDTO;
 import com.example.codese_spring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public List<ProductGetAll> getAllProducts() {
+    public List<ProductHomepageDTO> getAllProducts() {
         try {
             return productRepository.getAllProducts();
         } catch (Exception e) {
@@ -23,7 +23,7 @@ public class ProductService {
         }
     }
 
-    public ProductCRUD getProductById(String idInput) {
+    public ProductDTO getProductById(String idInput) {
         try {
             if (productRepository.checkProductExistedById(idInput)) {
                 return productRepository.getProductById(idInput);
@@ -35,10 +35,10 @@ public class ProductService {
         }
     }
 
-    public Boolean addProduct(ProductCRUD productCRUD) {
+    public Boolean addProduct(ProductDTO productDTO) {
         try {
-            if (!productRepository.checkProductExistedById(productCRUD.getProductID()) && !productRepository.checkProductExistedByName(productCRUD.getDisplay())) {
-                if (productRepository.addProduct(productCRUD) != 0) {
+            if (!productRepository.checkProductExistedById(productDTO.getProductID()) && !productRepository.checkProductExistedByName(productDTO.getDisplay())) {
+                if (productRepository.addProduct(productDTO) != 0) {
                     return true;
                 } else {
                     return false;
@@ -52,7 +52,7 @@ public class ProductService {
         }
     }
 
-    public List<ProductCRUD> getProductByPriceWithOrder(Integer sortType) {
+    public List<ProductDTO> getProductByPriceWithOrder(Integer sortType) {
         try {
             switch (sortType) {
                 case 0:
@@ -68,7 +68,7 @@ public class ProductService {
         }
     }
 
-    public List<ProductCRUD> getProductByDisplayWithOrder(Integer sortType) {
+    public List<ProductDTO> getProductByDisplayWithOrder(Integer sortType) {
         try {
             switch (sortType) {
                 case 0:
@@ -84,27 +84,31 @@ public class ProductService {
         }
     }
 
-    public List<ProductCRUD> getProductByDisplay(String display) {
+    public List<ProductDTO> getProductByDisplay(String display) {
         try {
-            return productRepository.getProductByDisplay(display);
+            if (display == null) {
+                return productRepository.getAllInfoProducts();
+            } else {
+                return productRepository.getProductByDisplay(display);
+            }
         } catch (Exception e) {
             System.out.println(e);
             return null;
         }
     }
 
-    public Boolean updateProduct(ProductCRUD productCRUD) {
+    public Boolean updateProduct(ProductDTO productDTO) {
         try {
-            if (productRepository.checkProductExistedById(productCRUD.getProductID())) {
-                if (productRepository.updateProduct1(productCRUD) != 0 && productRepository.checkProductExistedByName(productCRUD.getDisplay())) {
+            if (productRepository.checkProductExistedById(productDTO.getProductID())) {
+                if (productRepository.updateProduct1(productDTO) != 0 && productRepository.checkProductExistedByName(productDTO.getDisplay())) {
                     return true;
                 } else {
-                    System.out.println(productRepository.updateProduct(productCRUD));
+                    System.out.println(productRepository.updateProduct(productDTO));
                     return false;
                 }
             } else {
-                System.out.println(productRepository.checkProductExistedById(productCRUD.getProductID()));
-                System.out.println(productRepository.checkProductExistedByName(productCRUD.getDisplay()));
+                System.out.println(productRepository.checkProductExistedById(productDTO.getProductID()));
+                System.out.println(productRepository.checkProductExistedByName(productDTO.getDisplay()));
                 System.out.println("vao day roi");
                 return false;
             }

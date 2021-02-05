@@ -1,6 +1,6 @@
 package com.example.codese_spring.dto;
 
-public class ProductCRUD {
+public class ProductDTO {
     private String productID;
     private String display;
     private int priceIn;
@@ -11,11 +11,11 @@ public class ProductCRUD {
     private String description;
     private String images;
 
-    public ProductCRUD() {
+    public ProductDTO() {
 
     }
 
-    public ProductCRUD(String productID, String display, int priceIn, int priceOut, int priceSale, int amount, int shipday, String description, String images) {
+    public ProductDTO(String productID, String display, int priceIn, int priceOut, int priceSale, int amount, int shipday, String description, String images) {
         this.productID = productID;
         this.display = display;
         this.priceIn = priceIn;
@@ -101,7 +101,7 @@ public class ProductCRUD {
 
     @Override
     public String toString() {
-        return "ProductCRUD{" +
+        return "ProductDTO{" +
                 "productID='" + productID + '\'' +
                 ", display='" + display + '\'' +
                 ", priceIn=" + priceIn +

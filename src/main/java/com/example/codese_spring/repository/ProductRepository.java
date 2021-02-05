@@ -1,10 +1,10 @@
 package com.example.codese_spring.repository;
 
-import com.example.codese_spring.dto.ProductCRUD;
-import com.example.codese_spring.dto.ProductGetAll;
-import com.example.codese_spring.entity.Product;
-import com.example.codese_spring.helper.JdbcMapper.ProductCRUDMapper;
-import com.example.codese_spring.helper.JdbcMapper.ProductMapper;
+import com.example.codese_spring.dto.ProductDTO;
+import com.example.codese_spring.dto.ProductHomepageDTO;
+import com.example.codese_spring.exception.ProductNotEnoughException;
+import com.example.codese_spring.helper.JdbcMapper.ProductDTOMapper;
+import com.example.codese_spring.helper.JdbcMapper.ProductHomepageDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,89 +18,107 @@ public class ProductRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    //get all
-    public List<ProductGetAll> getAllProducts() {
+    //get all homepage
+    public List<ProductHomepageDTO> getAllProducts() {
         String sql = "select * from Product;";
-        List<ProductGetAll> product = jdbcTemplate.query(sql, new ProductMapper());
+        List<ProductHomepageDTO> product = jdbcTemplate.query(sql, new ProductHomepageDTOMapper());
+        return product;
+    }
+
+    // get all
+    public List<ProductDTO> getAllInfoProducts() {
+        String sql = "select * from Product where deleted = 0;";
+        List<ProductDTO> product = jdbcTemplate.query(sql, new ProductDTOMapper());
         return product;
     }
 
     // get by id
-    public ProductCRUD getProductById(String idInput) {
+    public ProductDTO getProductById(String idInput) {
         String sql = "select * from Product where productID = ?;";
         Object[] params = {idInput};
-        ProductCRUD product = (ProductCRUD) jdbcTemplate.queryForObject(sql, new ProductCRUDMapper(), params);
+        ProductDTO product = (ProductDTO) jdbcTemplate.queryForObject(sql, new ProductDTOMapper(), params);
         return product;
     }
 
     // check existed by id
-    public boolean checkProductExistedById(String idInput) {
+    public Boolean checkProductExistedById(String idInput) {
         String sql = "select exists (select * from Product where productID = ? and deleted = 0);";
         Object[] params = {idInput};
         return jdbcTemplate.queryForObject(sql, Boolean.class, params);
     }
 
     // check existed by name
-    public boolean checkProductExistedByName(String display) {
+    public Boolean checkProductExistedByName(String display) {
         String sql = "select exists (select * from Product where display = ? and deleted = 0);";
         Object[] params = {display};
         return jdbcTemplate.queryForObject(sql, Boolean.class, params);
     }
 
+    // check amount of product
+    public Boolean checkAmountOfProduct(String productID, Integer amount) {
+        String productName = this.getProductById(productID).getDisplay();
+        Integer amountLeft = this.getProductById(productID).getAmount() - amount;
+        if (amountLeft < 0) {
+            throw new ProductNotEnoughException("Sản phẩm " + productName + " không còn!");
+        } else {
+            return true;
+        }
+    }
+
     // add
-    public Integer addProduct(ProductCRUD productCRUD) {
+    public Integer addProduct(ProductDTO productDTO) {
         String sql = "insert into Product (productID, display, priceIn, priceOut, priceSale, amount, shipday, description, images) values (?,?,?,?,?,?,?,?,?)";
         String uuid = UUID.randomUUID().toString();
-        Object[] params = {uuid, productCRUD.getDisplay(), productCRUD.getPriceIn(), productCRUD.getPriceOut(), productCRUD.getPriceSale(), productCRUD.getAmount(), productCRUD.getShipday(), productCRUD.getDescription(), productCRUD.getImages()};
+        Object[] params = {uuid, productDTO.getDisplay(), productDTO.getPriceIn(), productDTO.getPriceOut(), productDTO.getPriceSale(), productDTO.getAmount(), productDTO.getShipday(), productDTO.getDescription(), productDTO.getImages()};
         return jdbcTemplate.update(sql, params);
     }
 
     // get by price out asc
-    public List<ProductCRUD> getAllPriceOutAsc(Integer sortType) {
+    public List<ProductDTO> getAllPriceOutAsc(Integer sortType) {
         String sql = "select * from Product order by priceOut ASC and deleted = 0;";
-        List<ProductCRUD> product = jdbcTemplate.query(sql, new ProductCRUDMapper());
+        List<ProductDTO> product = jdbcTemplate.query(sql, new ProductDTOMapper());
         return product;
     }
 
     // get by price out desc
-    public List<ProductCRUD> getAllPriceOutDesc(Integer sortType) {
+    public List<ProductDTO> getAllPriceOutDesc(Integer sortType) {
         String sql = "select * from Product order by priceOut DESC and deleted = 0;";
-        List<ProductCRUD> product = jdbcTemplate.query(sql, new ProductCRUDMapper());
+        List<ProductDTO> product = jdbcTemplate.query(sql, new ProductDTOMapper());
         return product;
     }
 
     // get by display asc
-    public List<ProductCRUD> getAllDisplayAsc(Integer sortType) {
+    public List<ProductDTO> getAllDisplayAsc(Integer sortType) {
         String sql = "select * from Product order by display ASC and deleted = 0;";
-        List<ProductCRUD> product = jdbcTemplate.query(sql, new ProductCRUDMapper());
+        List<ProductDTO> product = jdbcTemplate.query(sql, new ProductDTOMapper());
         return product;
     }
 
     // get by display desc
-    public List<ProductCRUD> getAllDisplayDesc(Integer sortType) {
+    public List<ProductDTO> getAllDisplayDesc(Integer sortType) {
         String sql = "select * from Product order by display DESC and deleted = 0;";
-        List<ProductCRUD> product = jdbcTemplate.query(sql, new ProductCRUDMapper());
+        List<ProductDTO> product = jdbcTemplate.query(sql, new ProductDTOMapper());
         return product;
     }
 
     // get by display ignore lower/upper
-    public List<ProductCRUD> getProductByDisplay(String display) {
+    public List<ProductDTO> getProductByDisplay(String display) {
         String sql = "select * from Product where lower(display) = lower(?) and deleted = 0;";
         // String sql = "select * from Product where display ilike ?;";
         Object[] params = {display};
-        return jdbcTemplate.query(sql, new ProductCRUDMapper(), params);
+        return jdbcTemplate.query(sql, new ProductDTOMapper(), params);
     }
 
-    public Integer updateProduct1(ProductCRUD productCRUD) {
+    public Integer updateProduct1(ProductDTO productDTO) {
         String sql = "update Product set display = ?, priceIn = ?, priceOut = ?, priceSale = ?, amount = ?, shipday = ?, description = ?, images = ? where productID = ?;";
-        return jdbcTemplate.update(sql, productCRUD.getDisplay(), productCRUD.getPriceIn(), productCRUD.getPriceOut(),
-                productCRUD.getPriceSale(), productCRUD.getAmount(), productCRUD.getShipday(), productCRUD.getDescription(), productCRUD.getImages(), productCRUD.getProductID());
+        return jdbcTemplate.update(sql, productDTO.getDisplay(), productDTO.getPriceIn(), productDTO.getPriceOut(),
+                productDTO.getPriceSale(), productDTO.getAmount(), productDTO.getShipday(), productDTO.getDescription(), productDTO.getImages(), productDTO.getProductID());
     }
 
-    public Integer updateProduct(ProductCRUD productCRUD) {
+    public Integer updateProduct(ProductDTO productDTO) {
         String sql = "update Product set display = ?, priceIn = ?, priceOut = ?, priceSale = ?, amount = ?, shipday = ?, description = ?, images = ? where productID = ?;";
-        Object[] params = {productCRUD.getDisplay(), productCRUD.getPriceIn(), productCRUD.getPriceOut(),
-                productCRUD.getPriceSale(), productCRUD.getAmount(), productCRUD.getShipday(), productCRUD.getDescription(), productCRUD.getImages(), productCRUD.getProductID()};
+        Object[] params = {productDTO.getDisplay(), productDTO.getPriceIn(), productDTO.getPriceOut(),
+                productDTO.getPriceSale(), productDTO.getAmount(), productDTO.getShipday(), productDTO.getDescription(), productDTO.getImages(), productDTO.getProductID()};
         int[] types = {Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR};
         return jdbcTemplate.update(sql, params, types);
     }

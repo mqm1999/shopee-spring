@@ -2,13 +2,13 @@ package com.example.codese_spring.dto;
 
 import com.example.codese_spring.entity.Product;
 
-public class ProductGetAll {
+public class ProductHomepageDTO {
     private String productID;
     private String display;
     private int priceSale;
     private String images;
 
-    public ProductGetAll() {
+    public ProductHomepageDTO() {
     }
 
     public String getProductID() {
@@ -45,7 +45,7 @@ public class ProductGetAll {
 
     @Override
     public String toString() {
-        return "ProductGetAll{" +
+        return "ProductHomepageDTO{" +
                 "productID='" + productID + '\'' +
                 ", display='" + display + '\'' +
                 ", priceSale=" + priceSale +
