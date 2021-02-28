@@ -32,6 +32,12 @@ public class ProductRepository {
         return product;
     }
 
+    // get all with pagination
+    public List<ProductDTO> getAllProductWithPaging(Integer offset, Integer limit) {
+        String sql = "select * from Product limit ?,?;";
+        Object[] params = {limit, offset};
+        return jdbcTemplate.query(sql, new ProductDTOMapper(), params);
+    }
     // get by id
     public ProductDTO getProductById(String idInput) {
         String sql = "select * from Product where productID = ?;";

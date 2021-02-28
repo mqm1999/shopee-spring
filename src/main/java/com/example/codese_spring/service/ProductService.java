@@ -1,7 +1,9 @@
 package com.example.codese_spring.service;
 
+import com.example.codese_spring.dto.PaginationDTO;
 import com.example.codese_spring.dto.ProductDTO;
 import com.example.codese_spring.dto.ProductHomepageDTO;
+import com.example.codese_spring.dto.ProductWithPagingDTO;
 import com.example.codese_spring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -129,5 +131,39 @@ public class ProductService {
             System.out.println(e);
             return false;
         }
+    }
+
+    public ProductWithPagingDTO getAllProductWithPaging(Integer page, Integer size) {
+        Integer limit, offset;
+
+        if (page != null && size != null) {
+            limit = size;
+            offset = (page - 1) * size;
+        } else {
+            offset = 0;
+            size = 10;
+            limit = 10;
+        }
+        List<ProductDTO> responseFullList = productRepository.getAllInfoProducts();
+        // tra ve list
+        List<ProductDTO> responseList = productRepository.getAllProductWithPaging(limit, offset);
+
+        // dem tong so trang
+        Integer totalPage;
+        if (responseFullList.size() % size == 0) {
+            totalPage = responseFullList.size() / size;
+        } else {
+            totalPage = responseFullList.size() / size + 1;
+        }
+
+        // page size
+        Integer pageSize = size;
+
+        // page length
+        Integer pageLength = responseList.size();
+
+        PaginationDTO paginationDTO = new PaginationDTO(totalPage, pageSize, pageLength);
+        ProductWithPagingDTO response = new ProductWithPagingDTO(responseList, paginationDTO);
+        return response;
     }
 }

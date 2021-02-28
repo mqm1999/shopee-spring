@@ -1,5 +1,7 @@
 package com.example.codese_spring.entity;
 
+import org.springframework.stereotype.Component;
+
 import java.util.UUID;
 
 public class Product {

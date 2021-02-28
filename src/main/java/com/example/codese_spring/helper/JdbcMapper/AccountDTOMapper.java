@@ -1,6 +1,6 @@
 package com.example.codese_spring.helper.JdbcMapper;
 
-import com.example.codese_spring.dto.AccountDTO;
+import com.example.codese_spring.security.AccountDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

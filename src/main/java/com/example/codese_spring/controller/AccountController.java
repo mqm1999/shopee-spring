@@ -1,6 +1,6 @@
 package com.example.codese_spring.controller;
 
-import com.example.codese_spring.dto.AccountDTO;
+import com.example.codese_spring.security.AccountDTO;
 import com.example.codese_spring.helper.ResponseBuilder.ResponseForm;
 import com.example.codese_spring.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,6 +2,7 @@ package com.example.codese_spring.controller;
 
 import com.example.codese_spring.dto.ProductDTO;
 import com.example.codese_spring.dto.ProductHomepageDTO;
+import com.example.codese_spring.dto.ProductWithPagingDTO;
 import com.example.codese_spring.helper.ResponseBuilder.ResponseForm;
 import com.example.codese_spring.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,13 @@ public class ProductController {
     public @ResponseBody
     ResponseEntity<ResponseForm<List<ProductDTO>>> getProductByDisplay(@RequestParam String display) {
         return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.getProductByDisplay(display), 1, "okokok"));
+    }
+
+    // paging
+    @GetMapping("/order")
+    public @ResponseBody
+    ResponseEntity<ResponseForm<ProductWithPagingDTO>> getAllProductWithPaging(@RequestParam (required = false) Integer page, @RequestParam (required = false) Integer size) {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.getAllProductWithPaging(page, size), 1, "okokok"));
     }
 
     // add product

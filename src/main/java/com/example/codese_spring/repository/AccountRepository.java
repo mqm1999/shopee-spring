@@ -1,7 +1,7 @@
 package com.example.codese_spring.repository;
 
-import com.example.codese_spring.dto.AccountDTO;
 import com.example.codese_spring.helper.JdbcMapper.AccountDTOMapper;
+import com.example.codese_spring.security.AccountDTO;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +12,12 @@ import java.util.UUID;
 public class AccountRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    public AccountDTO getAccountByName(String display) {
+        String sql = "select * from Account where display = ?;";
+        Object[] params = {display};
+        return (AccountDTO) jdbcTemplate.queryForObject(sql, new AccountDTOMapper(), params);
+    }
 
     public Integer checkAccountExisted(String display) {
         String sql = "select exists (select * from Account where display = ?;";
