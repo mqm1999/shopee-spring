@@ -74,8 +74,8 @@ public class ProductController {
     // paging
     @GetMapping("/order")
     public @ResponseBody
-    ResponseEntity<ResponseForm<ProductWithPagingDTO>> getAllProductWithPaging(@RequestParam (required = false) Integer page, @RequestParam (required = false) Integer size) {
-        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.getAllProductWithPaging(page, size), 1, "okokok"));
+    ResponseEntity<ResponseForm<ProductWithPagingDTO>> getAllProductWithPaging(@RequestParam (required = false) Integer page, @RequestParam (required = false) Integer size, @RequestHeader String token) {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.getAllProductWithPaging(page, size, token), 1, "okokok"));
     }
 
     // add product

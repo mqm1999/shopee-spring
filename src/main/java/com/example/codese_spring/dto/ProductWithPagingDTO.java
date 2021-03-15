@@ -5,13 +5,15 @@ import java.util.List;
 public class ProductWithPagingDTO {
     List<ProductDTO> listProduct;
     PaginationDTO paginationDTO;
+    String accountID;
 
     public ProductWithPagingDTO() {
     }
 
-    public ProductWithPagingDTO(List<ProductDTO> listProduct, PaginationDTO paginationDTO) {
+    public ProductWithPagingDTO(List<ProductDTO> listProduct, PaginationDTO paginationDTO, String accountID) {
         this.listProduct = listProduct;
         this.paginationDTO = paginationDTO;
+        this.accountID = accountID;
     }
 
     public List<ProductDTO> getListProduct() {
@@ -28,5 +30,13 @@ public class ProductWithPagingDTO {
 
     public void setPaginationDTO(PaginationDTO paginationDTO) {
         this.paginationDTO = paginationDTO;
+    }
+
+    public String getAccountID() {
+        return accountID;
+    }
+
+    public void setAccountID(String accountID) {
+        this.accountID = accountID;
     }
 }

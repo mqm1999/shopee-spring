@@ -23,4 +23,13 @@ public class ApiExceptionHandler {
     public String invalidInputException(Exception e, WebRequest request) {
         return "Thiếu input đầu vào";
     }
+
+    @ExceptionHandler(LoginFailException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public String loginFailException(Exception e, WebRequest request) {return "Wrong email or password";}
+
+    @ExceptionHandler(AccountExistedException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public String accountExistedException(Exception e, WebRequest request) {return "Account existed";}
+
 }

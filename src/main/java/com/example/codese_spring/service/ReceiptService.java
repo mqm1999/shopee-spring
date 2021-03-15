@@ -25,7 +25,7 @@ public class ReceiptService {
 
     public Boolean addReceipt(ReceiptRequestDTO receiptRequestDTO) {
         String display = "Fae Kirlin"; // tìm cách lấy tên để lấy ID truyền vào receipt
-        String accountID = accountRepository.getAccountByName(display).getAccountID();// lấy accountID
+        String accountID = accountRepository.getAccountByName(display).get(0).getAccountID();// lấy accountID
         String uuid = UUID.randomUUID().toString(); // tạo ID
         Integer totalMoney = 0;
         List<ProductRequestDTO> productRequestDTOList = receiptRequestDTO.getReceiptRequestDTO();

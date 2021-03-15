@@ -1,9 +1,7 @@
 package com.example.codese_spring.service;
 
-import com.example.codese_spring.dto.PaginationDTO;
-import com.example.codese_spring.dto.ProductDTO;
-import com.example.codese_spring.dto.ProductHomepageDTO;
-import com.example.codese_spring.dto.ProductWithPagingDTO;
+import com.example.codese_spring.dto.*;
+import com.example.codese_spring.repository.AuthRepository;
 import com.example.codese_spring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +12,9 @@ import java.util.List;
 public class ProductService {
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    AuthRepository authRepository;
 
     public List<ProductHomepageDTO> getAllProducts() {
         try {
@@ -133,7 +134,7 @@ public class ProductService {
         }
     }
 
-    public ProductWithPagingDTO getAllProductWithPaging(Integer page, Integer size) {
+    public ProductWithPagingDTO getAllProductWithPaging(Integer page, Integer size, String token) {
         Integer limit, offset;
 
         if (page != null && size != null) {
@@ -163,7 +164,8 @@ public class ProductService {
         Integer pageLength = responseList.size();
 
         PaginationDTO paginationDTO = new PaginationDTO(totalPage, pageSize, pageLength);
-        ProductWithPagingDTO response = new ProductWithPagingDTO(responseList, paginationDTO);
+        String responseAccountID = authRepository.getAccountID(token).getValue();
+        ProductWithPagingDTO response = new ProductWithPagingDTO(responseList, paginationDTO, responseAccountID);
         return response;
     }
 }
