@@ -1,4 +1,4 @@
-package com.example.codese_spring.security;
+package com.example.codese_spring.dto;
 
 public class AccountDTO {
     private String accountID;

@@ -164,7 +164,7 @@ public class ProductService {
         Integer pageLength = responseList.size();
 
         PaginationDTO paginationDTO = new PaginationDTO(totalPage, pageSize, pageLength);
-        String responseAccountID = authRepository.getAccountID(token).getValue();
+        String responseAccountID = authRepository.getAccountID(token).getAccountID();
         ProductWithPagingDTO response = new ProductWithPagingDTO(responseList, paginationDTO, responseAccountID);
         return response;
     }

@@ -11,7 +11,7 @@ public class LoginSessionDTOMapper implements RowMapper {
     public Object mapRow(ResultSet resultSet, int i) throws SQLException {
         LoginSessionDTO loginSessionDTO = new LoginSessionDTO();
         loginSessionDTO.setKey(resultSet.getString("token"));
-        loginSessionDTO.setValue(resultSet.getString("accountID"));
+        loginSessionDTO.setAccountID(resultSet.getString("accountID"));
         return loginSessionDTO;
 
     }

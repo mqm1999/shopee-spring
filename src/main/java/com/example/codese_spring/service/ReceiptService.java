@@ -1,6 +1,5 @@
 package com.example.codese_spring.service;
 
-import com.example.codese_spring.security.AccountDTO;
 import com.example.codese_spring.dto.ProductRequestDTO;
 import com.example.codese_spring.dto.ReceiptRequestDTO;
 import com.example.codese_spring.repository.AccountRepository;

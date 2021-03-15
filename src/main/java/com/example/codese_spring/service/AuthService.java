@@ -1,11 +1,12 @@
 package com.example.codese_spring.service;
 
+import com.example.codese_spring.dto.AccountDTO;
 import com.example.codese_spring.dto.LoginSessionDTO;
+import com.example.codese_spring.dto.SignInDTO;
 import com.example.codese_spring.exception.AccountExistedException;
 import com.example.codese_spring.exception.LoginFailException;
 import com.example.codese_spring.repository.AccountRepository;
 import com.example.codese_spring.repository.AuthRepository;
-import com.example.codese_spring.security.AccountDTO;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +22,20 @@ public class AuthService {
     @Autowired
     AccountRepository accountRepository;
 
-    public LoginSessionDTO loginSession(String email, String password) throws LoginFailException {
-        String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt(10));
-        List<AccountDTO> listResponse = authRepository.loginCheck(email, hashPassword);
+    public LoginSessionDTO loginSession(SignInDTO signInDTO) throws LoginFailException {
+        List<AccountDTO> listResponse = accountRepository.getAccountInfoByEmail(signInDTO.getEmail());
         if (listResponse.size() > 0) {
-            LoginSessionDTO loginSessionDTO = new LoginSessionDTO();
-            String key = UUID.randomUUID().toString();
-            String accountID = listResponse.get(0).getAccountID();
-            loginSessionDTO.setKey(key);
-            loginSessionDTO.setValue(accountID);
-            authRepository.addToken(accountID, key);
-            return loginSessionDTO;
+            if (BCrypt.checkpw(signInDTO.getPassword(), listResponse.get(0).getPassword())){
+                LoginSessionDTO loginSessionDTO = new LoginSessionDTO();
+                String key = UUID.randomUUID().toString();
+                String accountID = listResponse.get(0).getAccountID();
+                loginSessionDTO.setKey(key);
+                loginSessionDTO.setAccountID(accountID);
+                authRepository.addToken(accountID, key);
+                return loginSessionDTO;
+            } else {
+                throw new LoginFailException("Wrong password");
+            }
         } else {
             throw new LoginFailException("Wrong email or password");
         }

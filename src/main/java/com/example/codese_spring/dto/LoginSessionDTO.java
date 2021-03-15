@@ -2,14 +2,14 @@ package com.example.codese_spring.dto;
 
 public class LoginSessionDTO {
     private String key;
-    private String value;
+    private String accountID;
 
     public LoginSessionDTO() {
     }
 
-    public LoginSessionDTO(String key, String value) {
+    public LoginSessionDTO(String key, String accountID) {
         this.key = key;
-        this.value = value;
+        this.accountID = accountID;
     }
 
     public String getKey() {
@@ -20,11 +20,11 @@ public class LoginSessionDTO {
         this.key = key;
     }
 
-    public String getValue() {
-        return value;
+    public String getAccountID() {
+        return accountID;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setAccountID(String accountID) {
+        this.accountID = accountID;
     }
 }

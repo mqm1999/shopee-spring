@@ -1,7 +1,7 @@
 package com.example.codese_spring.service;
 
+import com.example.codese_spring.dto.AccountDTO;
 import com.example.codese_spring.exception.AccountExistedException;
-import com.example.codese_spring.security.AccountDTO;
 import com.example.codese_spring.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

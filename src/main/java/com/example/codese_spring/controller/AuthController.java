@@ -1,9 +1,10 @@
 package com.example.codese_spring.controller;
 
+import com.example.codese_spring.dto.AccountDTO;
 import com.example.codese_spring.dto.LoginSessionDTO;
+import com.example.codese_spring.dto.SignInDTO;
 import com.example.codese_spring.exception.AccountExistedException;
 import com.example.codese_spring.helper.ResponseBuilder.ResponseForm;
-import com.example.codese_spring.security.AccountDTO;
 import com.example.codese_spring.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,8 @@ public class AuthController {
     AuthService authService;
 
     @GetMapping("/login")
-    public ResponseEntity<ResponseForm<LoginSessionDTO>> loginSession(@RequestParam String email, @RequestParam String password) throws Exception {
-        return ResponseEntity.ok(ResponseForm.buildCustomResponse(authService.loginSession(email, password), 1, "okokok"));
+    public ResponseEntity<ResponseForm<LoginSessionDTO>> loginSession(@RequestBody SignInDTO signInDTO) throws Exception {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(authService.loginSession(signInDTO), 1, "okokok"));
     }
 
     @PostMapping("/signup")

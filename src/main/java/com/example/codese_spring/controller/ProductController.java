@@ -80,7 +80,7 @@ public class ProductController {
 
     // add product
     @PostMapping("/add")
-    public @ResponseBody
+    public
     ResponseEntity<ResponseForm<Boolean>> addProduct(@RequestBody ProductDTO productDTO) {
         return ResponseEntity.ok(ResponseForm.buildCustomResponse(productService.addProduct(productDTO), 1, "okokok"));
     }

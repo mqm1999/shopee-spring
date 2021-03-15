@@ -1,9 +1,10 @@
 package com.example.codese_spring.repository;
 
+import com.example.codese_spring.dto.AccountDTO;
 import com.example.codese_spring.dto.LoginSessionDTO;
 import com.example.codese_spring.helper.JdbcMapper.AccountDTOMapper;
 import com.example.codese_spring.helper.JdbcMapper.LoginSessionDTOMapper;
-import com.example.codese_spring.security.AccountDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
