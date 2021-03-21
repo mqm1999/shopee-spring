@@ -16,7 +16,7 @@ public class ReceiptController {
 
     @PostMapping("/new")
     public @ResponseBody
-    ResponseEntity<ResponseForm<Boolean>> addReceipt(@RequestBody ReceiptRequestDTO receiptRequestDTO) {
-        return ResponseEntity.ok(ResponseForm.buildCustomResponse(receiptService.addReceipt(receiptRequestDTO), 1, "okokok"));
+    ResponseEntity<ResponseForm<Boolean>> addReceipt(@RequestBody ReceiptRequestDTO receiptRequestDTO, @RequestParam String token) {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(receiptService.addReceipt(receiptRequestDTO, token), 1, "okokok"));
     }
 }

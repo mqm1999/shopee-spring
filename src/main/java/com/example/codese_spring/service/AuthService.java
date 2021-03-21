@@ -1,10 +1,12 @@
 package com.example.codese_spring.service;
 
+import com.example.codese_spring.constant.Constant;
 import com.example.codese_spring.dto.AccountDTO;
 import com.example.codese_spring.dto.LoginSessionDTO;
 import com.example.codese_spring.dto.SignInDTO;
 import com.example.codese_spring.exception.AccountExistedException;
 import com.example.codese_spring.exception.LoginFailException;
+import com.example.codese_spring.helper.Jwt.Jwt;
 import com.example.codese_spring.repository.AccountRepository;
 import com.example.codese_spring.repository.AuthRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -23,16 +25,13 @@ public class AuthService {
     AccountRepository accountRepository;
 
     public LoginSessionDTO loginSession(SignInDTO signInDTO) throws LoginFailException {
+        LoginSessionDTO loginSessionDTO = new LoginSessionDTO();
         List<AccountDTO> listResponse = accountRepository.getAccountInfoByEmail(signInDTO.getEmail());
         if (listResponse.size() > 0) {
             if (BCrypt.checkpw(signInDTO.getPassword(), listResponse.get(0).getPassword())){
-                LoginSessionDTO loginSessionDTO = new LoginSessionDTO();
-                String key = UUID.randomUUID().toString();
-                String accountID = listResponse.get(0).getAccountID();
-                loginSessionDTO.setKey(key);
-                loginSessionDTO.setAccountID(accountID);
-                authRepository.addToken(accountID, key);
-                return loginSessionDTO;
+                 loginSessionDTO.setKey(Jwt.generateToken(listResponse.get(0).getAccountID(), Constant.SECRET_KEY));
+                 loginSessionDTO.setAccountID(listResponse.get(0).getAccountID());
+                 return loginSessionDTO;
             } else {
                 throw new LoginFailException("Wrong password");
             }
@@ -54,7 +53,6 @@ public class AuthService {
             throw new AccountExistedException("Account existed");
         }
     }
-
 
     public Boolean logoutSession(String token) throws Exception {
         if(authRepository.changeSessionStatus(token) != 0) {

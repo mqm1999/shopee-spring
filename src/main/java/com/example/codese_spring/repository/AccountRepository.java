@@ -14,6 +14,10 @@ import java.util.UUID;
 public class AccountRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
+    public List<AccountDTO> getAccountById(String id) {
+        String sql = "select * from Account where id = ?;";
+        return jdbcTemplate.query(sql, new AccountDTOMapper(), id);
+    }
 
     public List<AccountDTO> getAccountInfoByEmail(String email) {
         String sql = "select * from Account where email = ?";

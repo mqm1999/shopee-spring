@@ -1,7 +1,9 @@
 package com.example.codese_spring.service;
 
+import com.example.codese_spring.constant.Constant;
 import com.example.codese_spring.dto.ProductRequestDTO;
 import com.example.codese_spring.dto.ReceiptRequestDTO;
+import com.example.codese_spring.helper.Jwt.Jwt;
 import com.example.codese_spring.repository.AccountRepository;
 import com.example.codese_spring.repository.ProductRepository;
 import com.example.codese_spring.repository.ReceiptRepository;
@@ -22,9 +24,8 @@ public class ReceiptService {
     @Autowired
     ProductRepository productRepository;
 
-    public Boolean addReceipt(ReceiptRequestDTO receiptRequestDTO) {
-        String display = "Fae Kirlin"; // tìm cách lấy tên để lấy ID truyền vào receipt
-        String accountID = accountRepository.getAccountByName(display).get(0).getAccountID();// lấy accountID
+    public Boolean addReceipt(ReceiptRequestDTO receiptRequestDTO, String token) {
+        String accountID = Jwt.verifyToken(token, Constant.SECRET_KEY);// lấy accountID
         String uuid = UUID.randomUUID().toString(); // tạo ID
         Integer totalMoney = 0;
         List<ProductRequestDTO> productRequestDTOList = receiptRequestDTO.getReceiptRequestDTO();
