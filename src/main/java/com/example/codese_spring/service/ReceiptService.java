@@ -19,9 +19,6 @@ public class ReceiptService {
     ReceiptRepository receiptRepository;
 
     @Autowired
-    AccountRepository accountRepository;
-
-    @Autowired
     ProductRepository productRepository;
 
     public Boolean addReceipt(ReceiptRequestDTO receiptRequestDTO, String token) {

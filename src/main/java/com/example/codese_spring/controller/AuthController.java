@@ -16,7 +16,7 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<ResponseForm<LoginSessionDTO>> loginSession(@RequestBody SignInDTO signInDTO) throws Exception {
         return ResponseEntity.ok(ResponseForm.buildCustomResponse(authService.loginSession(signInDTO), 1, "okokok"));
     }

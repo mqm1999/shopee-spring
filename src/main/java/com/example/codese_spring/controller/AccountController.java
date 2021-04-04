@@ -17,4 +17,9 @@ public class AccountController {
     public ResponseEntity<ResponseForm<Boolean>> addAccount(@RequestBody AccountDTO accountDTO) throws Exception {
         return ResponseEntity.ok(ResponseForm.buildCustomResponse(accountService.addAccount(accountDTO), 1, "okokok"));
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<ResponseForm<AccountDTO>> getAccountInfo(@RequestParam String token) throws Exception {
+        return ResponseEntity.ok(ResponseForm.buildCustomResponse(accountService.getAccountInfo(token), 1, "okokok"));
+    }
 }

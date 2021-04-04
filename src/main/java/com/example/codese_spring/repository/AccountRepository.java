@@ -15,7 +15,7 @@ public class AccountRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
     public List<AccountDTO> getAccountById(String id) {
-        String sql = "select * from Account where id = ?;";
+        String sql = "select * from Account where accountID = ?;";
         return jdbcTemplate.query(sql, new AccountDTOMapper(), id);
     }
 

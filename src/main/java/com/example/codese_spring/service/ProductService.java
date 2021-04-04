@@ -1,6 +1,8 @@
 package com.example.codese_spring.service;
 
+import com.example.codese_spring.constant.Constant;
 import com.example.codese_spring.dto.*;
+import com.example.codese_spring.helper.Jwt.Jwt;
 import com.example.codese_spring.repository.AuthRepository;
 import com.example.codese_spring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,7 +166,7 @@ public class ProductService {
         Integer pageLength = responseList.size();
 
         PaginationDTO paginationDTO = new PaginationDTO(totalPage, pageSize, pageLength);
-        String responseAccountID = authRepository.getAccountID(token).getAccountID();
+        String responseAccountID = Jwt.verifyToken(token, Constant.SECRET_KEY);
         ProductWithPagingDTO response = new ProductWithPagingDTO(responseList, paginationDTO, responseAccountID);
         return response;
     }
