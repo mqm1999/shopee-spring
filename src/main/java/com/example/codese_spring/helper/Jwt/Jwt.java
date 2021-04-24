@@ -9,12 +9,14 @@ import javax.xml.bind.DatatypeConverter;
 import java.util.Date;
 
 public class Jwt {
-    public static String generateToken(String userId, String secretKey) {
+    public static String generateToken(String userId, String role, String secretKey) {
         Date now = new Date();
         Date expiredTime = new Date(now.getTime() + Constant.JWT_EXPIRATION);
 
         String token = Jwts.builder()
                 .setSubject(String.valueOf(userId))
+                .claim("role", role)
+                .claim("id", userId)
                 .setIssuedAt(now)
                 .setExpiration(expiredTime)
                 .signWith(SignatureAlgorithm.HS512, secretKey)
@@ -27,5 +29,14 @@ public class Jwt {
                 .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                 .parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    // viet ham verifyToken moi
+
+    public static Claims getClaimFromToken(String token, String secretKey) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+                .parseClaimsJws(token).getBody();
+        return claims;
     }
 }

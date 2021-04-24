@@ -29,7 +29,7 @@ public class AuthService {
         List<AccountDTO> listResponse = accountRepository.getAccountInfoByEmail(signInDTO.getEmail());
         if (listResponse.size() > 0) {
             if (BCrypt.checkpw(signInDTO.getPassword(), listResponse.get(0).getPassword())){
-                 loginSessionDTO.setKey(Jwt.generateToken(listResponse.get(0).getAccountID(), Constant.SECRET_KEY));
+                 loginSessionDTO.setKey(Jwt.generateToken(listResponse.get(0).getAccountID(),listResponse.get(0).getRole(), Constant.SECRET_KEY));
                  loginSessionDTO.setAccountID(listResponse.get(0).getAccountID());
                  return loginSessionDTO;
             } else {
